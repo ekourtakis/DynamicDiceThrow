@@ -18,7 +18,7 @@ The Activity layout files for both Portrait and Landscape are already provided
 */
 
 class MainActivity : AppCompatActivity(), ButtonFragment.ButtonInterface {
-    var hasTwoContainers = false
+    private var hasTwoContainers = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +29,6 @@ class MainActivity : AppCompatActivity(), ButtonFragment.ButtonInterface {
             - show both fragments if Landscape
           */
         hasTwoContainers = findViewById<View>(R.id.container2) != null
-        val dieViewModel = ViewModelProvider(this)[DieViewModel::class.java]
         val buttonFragment = ButtonFragment()
 
         if (savedInstanceState == null)
@@ -50,8 +49,11 @@ class MainActivity : AppCompatActivity(), ButtonFragment.ButtonInterface {
         */
     // Remember to place Fragment transactions on BackStack so then can be reversed
     override fun buttonClicked() {
-
+        if (!hasTwoContainers)
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.container1, DieFragment())
+                .addToBackStack(null)
+                .commit()
     }
-
-
 }
